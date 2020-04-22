@@ -7,7 +7,7 @@ from torch.autograd import Variable
 
 
 class predict_WSI:
-    def __index__(self, model_path, no_classes=2, APS=500):
+    def __init__(self, model_path, no_classes=2, APS=500):
         self.model_path = model_path
         self.no_classes = no_classes
         self.APS = APS

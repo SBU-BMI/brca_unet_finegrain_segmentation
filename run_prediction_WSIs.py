@@ -12,7 +12,7 @@ def mkdir(fol):
 if __name__ == '__main__':
     wsi_path = '/data01/shared/hanle/svs_tcga_seer_brca/TCGA-E2-A153-01Z-00-DX1.svs'
     model_path = '/data02/shared/hanle/brca_unet_finegrain_segmentation/checkpoints/CP1860_resolution10_APS448_Test_upLearned_best_0.8005.pth'
-    out_fol = '.'
+    out_fol = wsi_path.split('/')[-1]
     mkdir(out_fol)
 
     patch_extraction_handler = patch_extraction(wsi_path, patch_size_10X=1000)
