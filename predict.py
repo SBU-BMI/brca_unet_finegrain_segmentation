@@ -14,7 +14,7 @@ from util_codes import main_gen_annot_predict_pair
 
 def get_args():
     parser = OptionParser()
-    parser.add_option('--model', '-m', default='CP584_resolution10_best_0.8450.pth', metavar='FILE',
+    parser.add_option('--model', '-m', default='CP1220_resolution10_APS448_Test_upLearned_best_0.7998.pth', metavar='FILE',
                       help="Specify the file in which is stored the model (default : 'MODEL.pth')")
     parser.add_option('--N_limit', default=500000, type=int, help='limit the number of data to be loaded')
     parser.add_option('--num_workers', default=4, type=int, help='number of workers')
@@ -25,6 +25,7 @@ def get_args():
 
 
 def load_model(no_class, model_file_name):
+    print('Loading model: ...', model_file_name)
     if 'upLearned' in model_file_name:
         net = UNet(n_channels=3, n_classes=no_class, bilinear=False)
     else:

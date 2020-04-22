@@ -12,18 +12,19 @@ class gen_annot_predict_pair:
         self.dest_fol = annot.rstrip('/') + '_combined'
         if not os.path.exists(self.dest_fol):
             os.mkdir(self.dest_fol)
-        self.random_pos = True
+        self.random_pos = False
 
     def combine(self, fn):
-        if self.random_pos:
-            fn, index, img_id = fn
-            combined_path = os.path.join(self.dest_fol, str(img_id) + '.png')
-        else:
-            index = 0
-            combined_path = os.path.join(self.dest_fol, fn + '.png')
+        fn, index, img_id = fn
 
+        if not self.random_pos:
+            index = 0
+
+        combined_path = os.path.join(self.dest_fol, str(img_id) + '.png')
         annot_path = os.path.join(self.annot_fol, fn)
         predicted_path = os.path.join(self.predicted_fol, fn)
+        if not os.path.exists(combined_path):
+            return 0
 
         print("combining...", fn)
 
@@ -40,13 +41,12 @@ class gen_annot_predict_pair:
     def main(self):
         fns = [f for f in os.listdir(self.annot_fol) if f.endswith('.png')]
 
-        if self.random_pos:
-            indices = [random.randint(0, 1) for _ in range(len(fns))]
-            img_ids = [i for i in range(len(fns))]
-            fns = [(f, i, img_id) for f, i, img_id in zip(fns, indices, img_ids)]
-            with open(os.path.join(self.dest_fol, 'annot_indices.txt'), 'w') as fid:
-                for fn, i, img_id in fns:
-                    fid.writelines('{} {} {}\n'.format(fn, img_id, i))
+        indices = [random.randint(0, 1) for _ in range(len(fns))]
+        img_ids = [i for i in range(len(fns))]
+        fns = [(f, i, img_id) for f, i, img_id in zip(fns, indices, img_ids)]
+        with open(os.path.join(self.dest_fol, 'annot_indices.txt'), 'w') as fid:
+            for fn, i, img_id in fns:
+                fid.writelines('{} {} {}\n'.format(fn, img_id, i))
 
         pool = mp.Pool(processes=20)
         pool.map(self.combine, fns)
