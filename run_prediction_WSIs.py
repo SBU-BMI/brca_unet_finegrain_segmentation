@@ -18,27 +18,31 @@ if __name__ == '__main__':
     mkdir(out_fol)
 
     patch_extraction_handler = patch_extraction(wsi_path, patch_size_10X=1000)
-    predict_WSI_handler = predict_WSI(model_path, no_classes=2, APS=500)
-    start = time.time()
+    predict_WSI_handler = predict_WSI(model_path, no_classes=2)
     len_coors = len(patch_extraction_handler.coors)
+    start = time.time()
+    num_patches_per_batch = 16
 
     while patch_extraction_handler.has_next():
-        patch, fname = patch_extraction_handler.next_patch()
-        fname_path = os.path.join(out_fol, fname)
-        if patch is not None:
-            time_elapsed = (time.time() - start)/60
-
-            print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
-                  format(fname,
-                        patch.shape,
-                        patch_extraction_handler.index,
-                        len_coors,
-                        time_elapsed,
-                        time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
+        patch_fnames = patch_extraction_handler.next_batch(num_patches=num_patches_per_batch)
+        for i, (patch, fname) in enumerate(patch_fnames):
+            fname_path = os.path.join(out_fol, fname)
+            if patch is None:
+                continue
 
             predicted_mask = predict_WSI_handler.predict_large_patch(patch)
 
             predicted_mask = predicted_mask*255
             cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
+
+            time_elapsed = (time.time() - start)/60
+            print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
+                  format(fname,
+                         patch.shape,
+                         patch_extraction_handler.index - num_patches_per_batch + i,
+                         len_coors,
+                         time_elapsed,
+                         time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
+
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 import openslide
 from PIL import Image
-
+import multiprocessing as mp
 
 class patch_extraction:
     def __init__(self, slide_name, patch_size_10X=1000):
@@ -72,6 +72,19 @@ class patch_extraction:
         patch, fname = self.extract_patch(self.coors[self.index])
         self.index += 1
         return patch, fname
+
+    def next_batch(self, num_patches=16):
+        if self.index + num_patches >= len(self.coors):
+            num_patches = len(self.coors) - self.index - 1
+
+        pool = mp.Pool(processes=num_patches)
+        results = pool.map(self.extract_patch, self.coors[self.index:self.index + num_patches])
+        self.index += num_patches
+
+        return results
+
+
+
 
 
 
