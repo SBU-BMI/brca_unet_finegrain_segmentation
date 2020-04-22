@@ -2,6 +2,7 @@ import os, sys
 from patch_extraction import patch_extraction
 from predict_WSI import predict_WSI
 import cv2
+import numpy as np
 import time
 
 
@@ -36,6 +37,8 @@ if __name__ == '__main__':
                         time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
 
             predicted_mask = predict_WSI_handler.predict_large_patch(patch)
-            cv2.imwrite(fname_path, predicted_mask)
+
+            predicted_mask = predicted_mask*255
+            cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
 
 
