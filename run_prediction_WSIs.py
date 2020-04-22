@@ -24,7 +24,8 @@ if __name__ == '__main__':
     num_patches_per_batch = 16
 
     while patch_extraction_handler.has_next():
-        patch_fnames = patch_extraction_handler.next_batch(num_patches=num_patches_per_batch)
+        patch_fnames = patch_extraction_handler.next_patch()
+        patch_fnames = [patch_fnames]
         for i, (patch, fname) in enumerate(patch_fnames):
             fname_path = os.path.join(out_fol, fname)
             if patch is None:
