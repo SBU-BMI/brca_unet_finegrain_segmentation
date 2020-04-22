@@ -18,7 +18,7 @@ if __name__ == '__main__':
     mkdir(out_fol)
 
     patch_extraction_handler = patch_extraction(wsi_path, patch_size_10X=1000)
-    predict_WSI_handler = predict_WSI(model_path, no_classes=2, APS=250)
+    predict_WSI_handler = predict_WSI(model_path, no_classes=2, APS=500)
     start = time.time()
     len_coors = len(patch_extraction_handler.coors)
 
