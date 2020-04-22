@@ -1,14 +1,28 @@
 import os, sys
-from patch_extraction import patch_extraction
+from patch_extraction import patch_extraction, data_loader_WSI
 from predict_WSI import predict_WSI
 import cv2
 import numpy as np
 import time
+from torch.utils.data import DataLoader, Dataset
 
 
 def mkdir(fol):
     if not os.path.exists(fol):
         os.mkdir(fol)
+
+
+def run_prediction(predict_WSI_handler, data_loader, out_fol):
+    for index, data in enumerate(data_loader):
+        patches, fnames = data
+        predicted_masks = predict_WSI_handler.predict_large_patch(patches)
+
+        print(f"Predicting: {index + 1}/{len(data_loader)}")
+
+        for i, fname in enumerate(fnames):
+            fname_path = os.path.join(out_fol, fname)
+            predicted_mask = predicted_masks[i]*255
+            cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
 
 
 if __name__ == '__main__':
@@ -19,32 +33,15 @@ if __name__ == '__main__':
 
     patch_extraction_handler = patch_extraction(wsi_path, patch_size_10X=1000)
     predict_WSI_handler = predict_WSI(model_path, no_classes=2)
-    len_coors = len(patch_extraction_handler.coors)
     start = time.time()
-    num_patches_per_batch = 16
 
-    while patch_extraction_handler.has_next():
-        patch_fnames = patch_extraction_handler.next_patch()
-        patch_fnames = [patch_fnames]
-        for i, (patch, fname) in enumerate(patch_fnames):
-            fname_path = os.path.join(out_fol, fname)
-            if patch is None:
-                continue
+    imgs_set_complete = data_loader_WSI(patch_extraction_handler, isComplete=True)
+    imgs_set_partial = data_loader_WSI(patch_extraction_handler, isComplete=False)
 
-            time_elapsed = (time.time() - start)/60
-            print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
-                  format(fname,
-                         patch.shape,
-                         patch_extraction_handler.index - num_patches_per_batch + i,
-                         len_coors,
-                         time_elapsed,
-                         time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
+    data_loader_complete = DataLoader(imgs_set_complete, batch_size=4, shuffle=False, num_workers=8)
+    data_loader_partial = DataLoader(imgs_set_partial, batch_size=1, shuffle=False, num_workers=8)
 
-            predicted_mask = predict_WSI_handler.predict_large_patch(patch)
-
-            predicted_mask = predicted_mask*255
-            cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
-
-
+    run_prediction(predict_WSI_handler, data_loader_complete, out_fol)
+    run_prediction(predict_WSI_handler, data_loader_partial, out_fol)
 
 
