@@ -77,8 +77,11 @@ class patch_extraction:
         if self.index + num_patches >= len(self.coors):
             num_patches = len(self.coors) - self.index - 1
 
+        coor_list = self.coors[self.index:self.index + num_patches]
         pool = mp.Pool(processes=num_patches)
-        results = pool.map(self.extract_patch, self.coors[self.index:self.index + num_patches])
+        results = pool.map(self.extract_patch, coor_list)
+        pool.close()
+
         self.index += num_patches
 
         return results
