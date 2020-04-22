@@ -22,7 +22,9 @@ if __name__ == '__main__':
         patch, fname = patch_extraction_handler.next_patch()
         fname_path = os.path.join(out_fol, fname)
         if patch is not None:
+            print("Predicting patch: {}/{}".format(patch_extraction_handler.index, len(patch_extraction_handler.coors)))
             predicted_mask = predict_WSI_handler.predict_large_patch(patch)
+
             cv2.imwrite(fname_path, predicted_mask)
 
 

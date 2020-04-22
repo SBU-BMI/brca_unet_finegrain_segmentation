@@ -15,7 +15,7 @@ class predict_WSI:
         self.net = self.load_model()
 
     def load_model(self):
-        print('Loading model: ...', self.model_path)
+        print('Loading model from ', self.model_path)
         try:
             net = UNet(n_channels=3, n_classes=self.no_classes, bilinear=False)
         except:
@@ -23,7 +23,7 @@ class predict_WSI:
 
         net = parallelize_model(net)
         net.load_state_dict(torch.load(self.model_path))
-        print("Model loaded !")
+        print("Model loaded!")
         net.eval()
         return net
 
@@ -52,6 +52,6 @@ class predict_WSI:
                 predicted_mask[r: r + self.APS, c: c + self.APS] = masks_pred[ind]
                 ind += 1
 
-        return masks_pred
+        return predicted_mask
 
 
