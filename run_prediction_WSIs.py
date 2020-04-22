@@ -33,7 +33,7 @@ if __name__ == '__main__':
                         patch_extraction_handler.index,
                         len_coors,
                         time_elapsed,
-                        time_elapsed*len_coors/patch_extraction_handler.index))
+                        time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
 
             predicted_mask = predict_WSI_handler.predict_large_patch(patch)
             cv2.imwrite(fname_path, predicted_mask)
