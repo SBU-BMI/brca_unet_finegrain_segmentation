@@ -63,7 +63,7 @@ class patch_extraction:
         patch = patch.resize((int(self.patch_size_10X * pw_x / self.pw), int(self.patch_size_10X * pw_y / self.pw)),
                              Image.ANTIALIAS)
 
-        return np.array(patch[:, :, :3]), fname
+        return np.array(patch)[:, :, :3], fname
 
     def has_next(self):
         return self.index < len(self.coors)
