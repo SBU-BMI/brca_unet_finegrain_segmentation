@@ -29,13 +29,13 @@ class predict_WSI:
 
     def predict_large_patch(self, data):
         device = torch.device("cuda:0")
-        patch_size = data.shape[1]  # data.shape 1000x1000x3
-        num_splits = patch_size // self.APS
-        imgs = torch.empty(num_splits * num_splits, 3, self.APS, self.APS)
-        predicted_mask = np.zeros((patch_size, patch_size))
+        h, w = data.shape[:2]  # data.shape 1000x1000x3
+        num_rows, num_cols = h // self.APS, w // self.APS
+        imgs = torch.empty(num_rows * num_cols, 3, self.APS, self.APS)
+        predicted_mask = np.zeros((h, w))
         ind = 0
-        for r in range(0, patch_size, self.APS):
-            for c in range(0, patch_size, self.APS):
+        for r in range(0, h, self.APS):
+            for c in range(0, w, self.APS):
                 img = data[r: r + self.APS, c: c + self.APS, :]
                 img = Image.fromarray(img.astype(np.uint8), 'RGB')
                 imgs[ind] = self.data_transforms['val'](img)  # 3xAPSxAPS
@@ -47,8 +47,8 @@ class predict_WSI:
         masks_pred = masks_pred.data.cpu().numpy()
 
         ind = 0
-        for r in range(0, patch_size, self.APS):
-            for c in range(0, patch_size, self.APS):
+        for r in range(0, h, self.APS):
+            for c in range(0, w, self.APS):
                 predicted_mask[r: r + self.APS, c: c + self.APS] = masks_pred[ind]
                 ind += 1
 
