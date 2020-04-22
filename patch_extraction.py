@@ -60,22 +60,22 @@ class patch_extraction:
 
         fname = '{}_{}_{}_{}.png'.format(x, y, self.pw, self.patch_size_10X)
         patch = self.oslide.read_region((x, y), 0, (pw_x, pw_y))
-
-        patch_arr = np.array(patch)
-        if patch_arr[:, :, 3].max() == 0:  # this is blank regions
-            return None, None
         patch = patch.resize((int(self.patch_size_10X * pw_x / self.pw), int(self.patch_size_10X * pw_y / self.pw)),
                              Image.ANTIALIAS)
 
-        return patch, fname
+        return np.array(patch)[:, :, :3], fname
 
     def has_next(self):
-        return self.index < len(self.coors)
+        return self.index < len(self.coors) - 1
 
     def next_patch(self):
         patch, fname = self.extract_patch(self.coors[self.index])
         self.index += 1
         return patch, fname
+
+
+
+
 
 
 
