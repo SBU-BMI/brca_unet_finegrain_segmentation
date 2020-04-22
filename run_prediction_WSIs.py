@@ -30,11 +30,6 @@ if __name__ == '__main__':
             if patch is None:
                 continue
 
-            predicted_mask = predict_WSI_handler.predict_large_patch(patch)
-
-            predicted_mask = predicted_mask*255
-            cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
-
             time_elapsed = (time.time() - start)/60
             print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
                   format(fname,
@@ -43,6 +38,12 @@ if __name__ == '__main__':
                          len_coors,
                          time_elapsed,
                          time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
+
+            predicted_mask = predict_WSI_handler.predict_large_patch(patch)
+
+            predicted_mask = predicted_mask*255
+            cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
+
 
 
 
