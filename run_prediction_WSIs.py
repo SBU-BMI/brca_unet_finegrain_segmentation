@@ -27,7 +27,7 @@ if __name__ == '__main__':
         if patch is not None:
             time_elapsed = (time.time() - start)/60
 
-            print("Predicting patch {} - {}: {}/{} \t time_elapsed: {} \t time_remaining: {}".
+            print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
                   format(fname,
                         patch.shape,
                         patch_extraction_handler.index,
