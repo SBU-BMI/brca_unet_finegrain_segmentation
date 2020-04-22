@@ -3,6 +3,11 @@ import openslide
 from PIL import Image
 import multiprocessing as mp
 
+
+def unwrap_self_extract_patch(arg, **kwarg):
+    return patch_extraction.extract_patch(*arg, **kwarg)
+
+
 class patch_extraction:
     def __init__(self, slide_name, patch_size_10X=1000):
         self.slide_name = slide_name
@@ -66,7 +71,7 @@ class patch_extraction:
         return np.array(patch)[:, :, :3], fname
 
     def has_next(self):
-        return self.index < len(self.coors)
+        return self.index < len(self.coors) - 1
 
     def next_patch(self):
         patch, fname = self.extract_patch(self.coors[self.index])
@@ -79,7 +84,7 @@ class patch_extraction:
 
         coor_list = self.coors[self.index:self.index + num_patches]
         pool = mp.Pool(processes=num_patches)
-        results = pool.map(self.extract_patch, coor_list)
+        results = pool.map(unwrap_self_extract_patch, zip([self]*len(coor_list), coor_list))
         pool.close()
 
         self.index += num_patches
