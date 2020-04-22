@@ -25,14 +25,15 @@ if __name__ == '__main__':
         patch, fname = patch_extraction_handler.next_patch()
         fname_path = os.path.join(out_fol, fname)
         if patch is not None:
-            time_elapsed = time.time() - start
+            time_elapsed = (time.time() - start)/60
 
-            print("Predicting patch {}: {}/{} \t time_elapsed: {} \t time_remaining: {}".
-                  format(patch.shape,
+            print("Predicting patch {} - {}: {}/{} \t time_elapsed: {} \t time_remaining: {}".
+                  format(fname,
+                        patch.shape,
                         patch_extraction_handler.index,
                         len_coors,
                         time_elapsed,
-                        time_elapsed*patch_extraction_handler.index/len_coors))
+                        time_elapsed*len_coors/patch_extraction_handler.index))
 
             predicted_mask = predict_WSI_handler.predict_large_patch(patch)
             cv2.imwrite(fname_path, predicted_mask)
