@@ -1,6 +1,8 @@
 import numpy as np
 import openslide
 from PIL import Image
+from torch.utils.data import DataLoader, Dataset
+from train import get_data_transforms
 
 
 class patch_extraction:
@@ -74,8 +76,22 @@ class patch_extraction:
         return patch, fname
 
 
+class data_loader_WSI(Dataset):
+    def __init__(self, patch_extraction_instance):
+        self.patch_extraction = patch_extraction_instance        # patch_extraction instance
+        self.coors = patch_extraction_instance.coors
+        self.transform = get_data_transforms()['val']
 
+    def __getitem__(self, index):
+        img, fname = self.patch_extraction.extract_patch(self.coors[index])
 
+        img = Image.fromarray(img.astype(np.uint8), 'RGB')
+        img = self.transform(img)
+
+        return img, fname
+
+    def __len__(self):
+        return len(self.patch_extraction.coors)
 
 
 

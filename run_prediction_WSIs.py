@@ -1,9 +1,10 @@
 import os, sys
-from patch_extraction import patch_extraction
+from patch_extraction import patch_extraction, data_loader_WSI
 from predict_WSI import predict_WSI
 import cv2
 import numpy as np
 import time
+from torch.utils.data import DataLoader, Dataset
 
 
 def mkdir(fol):
@@ -22,25 +23,31 @@ if __name__ == '__main__':
     len_coors = len(patch_extraction_handler.coors)
     start = time.time()
 
-    while patch_extraction_handler.has_next():
-        patch, fname = patch_extraction_handler.next_patch()
-        fname_path = os.path.join(out_fol, fname)
-        if patch is None:
-            continue
+    imgs_set = data_loader_WSI(patch_extraction_handler)
+    train_loader = DataLoader(imgs_set, batch_size=2, shuffle=False, num_workers=8)
 
-        predicted_mask = predict_WSI_handler.predict_large_patch(patch)
+    for i, data in enumerate(train_loader):
+        patches, fnames = data
 
-        predicted_mask = predicted_mask*255
-        cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
+        # fname_path = os.path.join(out_fol, fname)
+        # if patch is None:
+        #     continue
 
-        time_elapsed = (time.time() - start)/60
-        print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
-              format(fname,
-                     patch.shape,
-                     patch_extraction_handler.index,
-                     len_coors,
-                     time_elapsed,
-                     time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
+        predicted_mask = predict_WSI_handler.predict_large_patch(patches)
+
+        print(predicted_mask.shape)
+
+        # predicted_mask = predicted_mask*255
+        # cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
+
+        # time_elapsed = (time.time() - start)/60
+        # print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
+        #       format(fname,
+        #              patch.shape,
+        #              patch_extraction_handler.index,
+        #              len_coors,
+        #              time_elapsed,
+        #              time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
 
 
 
