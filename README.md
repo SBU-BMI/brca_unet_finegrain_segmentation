@@ -32,9 +32,15 @@ This repo is for training and running prediction of brca finegrain segmentation 
 - Run python train.py to train the model.
 - Arguments can be passed to select input size of the model, batch size, learning rate, etc.
 
-## Predict
+## Prediction on testset
 
-- Run python predict.py to run prediction for validation patches.
+- Run python predict_testset.py to run prediction for testing patches.
 - Predicted patches will be stored in data folder, under the name "predicted_imgs_10X", if the patches are at 10X
 - The predicted patches are original patches overlayed with predicted masks.
+
+## Prediction on WSIs
+
+- Run python prediction_WSIs.py to run prediction on WSIs
+- Arguments to be change in the __main__ function including wsi_fol, wsi_extension, model_path, out_fol
+- All WSIs in the wsi_fol with extension wsi_extension will be processed. The predicted masks are saved in corresponding folder in out_fol
 
