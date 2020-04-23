@@ -8,7 +8,6 @@ from multiprocessing import Pool
 
 def generate_json_one_wsi(wsi_paths):
     wsi_path, wsi_out = wsi_paths
-    print('Generating json for: ', wsi_out)
     generate_polygon_json_handler = generate_polygon_json(wsi_path, wsi_out)
     generate_polygon_json_handler.main()
 
