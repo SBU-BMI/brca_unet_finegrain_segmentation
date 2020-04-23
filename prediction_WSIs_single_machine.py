@@ -51,7 +51,7 @@ class run_prediction_WSIs:
         imgs_set_complete = data_loader_WSI(patch_extraction_handler, isComplete=True)
         imgs_set_partial = data_loader_WSI(patch_extraction_handler, isComplete=False)
 
-        data_loader_complete = DataLoader(imgs_set_complete, batch_size=4, shuffle=False, num_workers=16)
+        data_loader_complete = DataLoader(imgs_set_complete, batch_size=2, shuffle=False, num_workers=16)
         data_loader_partial = DataLoader(imgs_set_partial, batch_size=1, shuffle=False, num_workers=16)
 
         self.run_prediction(data_loader_complete, out_fol_wsi)
