@@ -59,6 +59,7 @@ if __name__ == '__main__':
     # end of parameter to change ================================================
 
     create_fol(OUT_FOLDER)
+    run_prediction_WSIs_handler = run_prediction_WSIs(IN_FOLDER, wsi_extension, OUT_FOLDER, model_path)
 
     indicator_file = 'prediction_done.txt'
     done_fol = 'done'
@@ -87,7 +88,6 @@ if __name__ == '__main__':
         slide_path = os.path.join(IN_FOLDER, slide_name)
         try:
             touch_file(os.path.join(processing_fol, slide_name))
-            run_prediction_WSIs_handler = run_prediction_WSIs(IN_FOLDER, wsi_extension, OUT_FOLDER, model_path)
             run_prediction_WSIs_handler.run_prediction_one_WSI(slide_path)
         except:
             print("Fail predicting slide: ", slide_path)
