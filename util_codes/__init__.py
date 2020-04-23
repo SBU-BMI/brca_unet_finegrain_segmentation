@@ -3,3 +3,4 @@ from .color_comp_predict import color_comp_main
 from .eval import eval_net
 from .patch_extraction import patch_extraction, data_loader_WSI
 from .predict_WSI import predict_WSI
+from .generate_polygon_json import generate_polygon_json
