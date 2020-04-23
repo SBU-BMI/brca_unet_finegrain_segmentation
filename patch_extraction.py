@@ -10,7 +10,7 @@ class patch_extraction:
         self.slide_name = slide_name
         self.patch_size_10X = patch_size_10X
         self.oslide, self.pw, self.width, self.height = self.get_oslide()
-        self.coors = self.get_coors()
+        self.coors, self.coors_partial = self.get_coors()
         self.index = 0
 
     def get_oslide(self):
@@ -40,6 +40,7 @@ class patch_extraction:
 
     def get_coors(self):
         coors = []
+        coors_partial = []
         for x in range(1, self.width, self.pw):
             for y in range(1, self.height, self.pw):
                 if x + self.pw > self.width:
@@ -53,9 +54,12 @@ class patch_extraction:
                     pw_y = self.pw
 
                 if int(self.patch_size_10X * pw_x / self.pw) > 50 and int(self.patch_size_10X * pw_y / self.pw) > 50:
-                    coors.append((x, y, pw_x, pw_y))
+                    if pw_x == self.pw and pw_y == self.pw:
+                        coors.append((x, y, pw_x, pw_y))
+                    else:
+                        coors_partial.append((x, y, pw_x, pw_y))
 
-        return coors
+        return coors, coors_partial
 
     def extract_patch(self, corr):
         x, y, pw_x, pw_y = corr
@@ -68,18 +72,23 @@ class patch_extraction:
         return np.array(patch)[:, :, :3], fname
 
     def has_next(self):
-        return self.index < len(self.coors) - 1
+        return self.index < len(self.coors) + len(self.coors_partial) - 1
 
     def next_patch(self):
-        patch, fname = self.extract_patch(self.coors[self.index])
+        coors = self.coors_partial + self.coors
+        patch, fname = self.extract_patch(coors[self.index])
         self.index += 1
         return patch, fname
 
 
 class data_loader_WSI(Dataset):
-    def __init__(self, patch_extraction_instance):
+    def __init__(self, patch_extraction_instance, isComplete=True):
         self.patch_extraction = patch_extraction_instance        # patch_extraction instance
-        self.coors = patch_extraction_instance.coors
+        if isComplete:
+            self.coors = patch_extraction_instance.coors
+        else:
+            self.coors = patch_extraction_instance.coors_partial
+
         self.transform = get_data_transforms()['val']
 
     def __getitem__(self, index):
