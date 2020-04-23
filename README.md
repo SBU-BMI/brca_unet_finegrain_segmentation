@@ -41,6 +41,11 @@ This repo is for training and running prediction of brca finegrain segmentation 
 ## Prediction on WSIs
 
 - Run python prediction_WSIs.py to run prediction on WSIs
-- Arguments to be change in the __main__ function including wsi_fol, wsi_extension, model_path, out_fol
+- Arguments to be changed in the __main__ function including wsi_fol, wsi_extension, model_path, out_fol
 - All WSIs in the wsi_fol with extension wsi_extension will be processed. The predicted masks are saved in corresponding folder in out_fol
 
+## Generaate polygon jsons for predicted masks
+
+- Run python generate_jsons.py to generate jsons for WSIs
+- Arguments to be changed in the __main__ function including wsi_fol and out_fol
+- The output for each WSI is one json file stored in the folder that contains its predicted masks
