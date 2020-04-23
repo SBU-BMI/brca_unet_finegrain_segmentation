@@ -40,7 +40,9 @@ This repo is for training and running prediction of brca finegrain segmentation 
 
 ## Prediction on WSIs
 
-- Run python prediction_WSIs.py to run prediction on WSIs
+- Either run python prediction_WSIs_single_machine.py or python prediction_WSIs_multiple_machines.py to run prediction on WSIs
+- Use prediction_WSIs_single_machine.py if you have only 1 machine to use
+- Use prediction_WSIs_multiple_machines.py on different machine to process multiple WSIs at the same time
 - Arguments to be changed in the __main__ function including wsi_fol, wsi_extension, model_path, out_fol
 - All WSIs in the wsi_fol with extension wsi_extension will be processed. The predicted masks are saved in corresponding folder in out_fol
 

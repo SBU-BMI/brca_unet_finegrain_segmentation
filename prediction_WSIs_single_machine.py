@@ -70,12 +70,14 @@ def main(wsi_fol, wsi_extension, out_fol, model_path):
     run_prediction_WSIs_handler.main()
 
 if __name__ == '__main__':
+    # parameter to change =======================================================
     wsi_fol = '/data01/shared/hanle/svs_tcga_seer_brca'
     wsi_extension = 'svs'
     model_path = 'model/CP1860_resolution10_APS448_Test_upLearned_best_0.8005.pth'
     out_fol = wsi_fol.rstrip('/').split('/')[-1]
-    mkdir(out_fol)
+    # end of parameter to change ================================================
 
+    mkdir(out_fol)
     main(wsi_fol, wsi_extension, out_fol, model_path)
 
 
