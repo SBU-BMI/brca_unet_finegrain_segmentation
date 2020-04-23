@@ -8,6 +8,7 @@ from multiprocessing import Pool
 
 def generate_json_one_wsi(wsi_paths):
     wsi_path, wsi_out = wsi_paths
+    print('Generating json for: ', wsi_out)
     generate_polygon_json_handler = generate_polygon_json(wsi_path, wsi_out)
     generate_polygon_json_handler.main()
 
@@ -24,12 +25,14 @@ def is_NOT_done_gen_json(wsi_out):
 
 
 def need_process_wsis(out_fol):
-    fols = [fol for fol in os.listdir(out_fol) if is_done_prediction(fol) and is_NOT_done_gen_json(fol)]
+    join_path = lambda fol:os.path.join(out_fol, fol)
+    fols = [fol for fol in os.listdir(out_fol) if is_done_prediction(join_path(fol)) and is_NOT_done_gen_json(join_path(fol))]
     return fols
 
 
 def is_done_gen_json(out_fol):
-    done_gen_json = [fol for fol in os.listdir(out_fol) if not is_NOT_done_gen_json(fol) and not fol.startswith('.')]
+    join_path = lambda fol:os.path.join(out_fol, fol)
+    done_gen_json = [fol for fol in os.listdir(out_fol) if not is_NOT_done_gen_json(join_path(fol)) and not fol.startswith('.')]
     all_fols = [fol for fol in os.listdir(out_fol) if not fol.startswith('.')]
     return len(done_gen_json) == len(all_fols)
 
@@ -40,9 +43,11 @@ def main(wsi_fol, out_fol):
         args = [(os.path.join(wsi_fol, fol), os.path.join(out_fol, fol)) for fol in wsi_out_fols]
 
         if len(wsi_out_fols) == 0:
+            print('No input data avail, waiting for prediction...')
             time.sleep(60)
             if is_done_gen_json(out_fol):
                 return
+            continue
 
         pool = Pool(processes=min(16, len(wsi_out_fols)))
         pool.map(generate_json_one_wsi, args)
