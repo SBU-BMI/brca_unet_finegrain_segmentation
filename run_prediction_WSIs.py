@@ -24,30 +24,23 @@ if __name__ == '__main__':
     start = time.time()
 
     imgs_set = data_loader_WSI(patch_extraction_handler)
-    train_loader = DataLoader(imgs_set, batch_size=2, shuffle=False, num_workers=8)
+    data_loader = DataLoader(imgs_set, batch_size=2, shuffle=False, num_workers=8)
 
-    for i, data in enumerate(train_loader):
+    for i, data in enumerate(data_loader):
         patches, fnames = data
+        predicted_masks = predict_WSI_handler.predict_large_patch(patches)
 
-        # fname_path = os.path.join(out_fol, fname)
-        # if patch is None:
-        #     continue
+        for i, fname in enumerate(fnames):
+            fname_path = os.path.join(out_fol, fname)
+            predicted_mask = predicted_masks[i]*255
+            cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
 
-        predicted_mask = predict_WSI_handler.predict_large_patch(patches)
-
-        print(predicted_mask.shape)
-
-        # predicted_mask = predicted_mask*255
-        # cv2.imwrite(fname_path, predicted_mask.astype(np.uint8))
-
-        # time_elapsed = (time.time() - start)/60
-        # print("Predicting patch {} - {}: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
-        #       format(fname,
-        #              patch.shape,
-        #              patch_extraction_handler.index,
-        #              len_coors,
-        #              time_elapsed,
-        #              time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
+        time_elapsed = (time.time() - start)/60
+        print("Predicting patchs: {}/{} \t time_elapsed: {:.2f}mins \t time_remaining: {:.2f}mins".
+              format(patch_extraction_handler.index,
+                     len_coors,
+                     time_elapsed,
+                     time_elapsed*len_coors/patch_extraction_handler.index - time_elapsed))
 
 
 

@@ -29,12 +29,10 @@ class predict_WSI:
     def predict_large_patch(self, img):
         device = torch.device("cuda:0")
 
-        # img.unsqueeze_(0)
         img = Variable(img.to(device))
 
         masks_pred = self.net(img)
         _, masks_pred = torch.max(masks_pred.data, 1)
-        # masks_pred.squeeze_(0)
         masks_pred = masks_pred.data.cpu().numpy()
 
         return masks_pred
