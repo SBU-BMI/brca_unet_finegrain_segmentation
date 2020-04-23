@@ -100,7 +100,7 @@ class data_loader_WSI(Dataset):
         return img, fname
 
     def __len__(self):
-        return len(self.patch_extraction.coors)
+        return len(self.coors)
 
 
 
