@@ -3,3 +3,5 @@ checkpoints/
 logs/
 .*
 _*
+done/
+processing/

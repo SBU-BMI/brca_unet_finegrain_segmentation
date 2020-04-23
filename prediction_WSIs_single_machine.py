@@ -33,8 +33,8 @@ class run_prediction_WSIs:
         for index, data in enumerate(data_loader):
             patches, fnames = data
             predicted_masks = self.predict_WSI_handler.predict_large_patch(patches)
-
-            print(f"Predicting: {index + 1}/{len(data_loader)}")
+            if (index + 1) % 20 == 0:
+                print(f"Predicting: {index + 1}/{len(data_loader)}")
 
             for i, fname in enumerate(fnames):
                 fname_path = os.path.join(out_fol_wsi, fname)

@@ -1,6 +1,6 @@
 import os, sys, time, random
 import traceback
-from prediction_WSIs import run_prediction_WSIs
+from prediction_WSIs_single_machine import run_prediction_WSIs
 
 
 def touch_file(fn):
