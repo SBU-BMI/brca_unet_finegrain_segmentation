@@ -80,7 +80,7 @@ class generate_polygon_json:
         with open(json_fn, 'w') as fp:
             json.dump(json_wsi, fp)
 
-        print('Done generating json file: {}. Time: {:.2f}mins'.format(self.wsi_out, (time.time() - start)/60))
+        print('Done generating json file: {}, {} patches. Time: {:.2f}mins'.format(self.wsi_out, len(png_fns), (time.time() - start)/60))
         return json_wsi
 
 
