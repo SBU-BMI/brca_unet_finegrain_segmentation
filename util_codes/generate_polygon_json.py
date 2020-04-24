@@ -9,8 +9,11 @@ import time
 
 def get_json_template():
     json = {
+        "wsi": '',
+        "width": 0,
+        "height": 0,
         "polygon": [],
-        "area": 0
+        "tumor_area_at_10X": 0
     }
     return json
 
@@ -52,7 +55,7 @@ class generate_polygon_json:
         contours = measure.find_contours(binary_mask, 0.5)
 
         json = get_json_template()
-        json["area"] = area.tolist()
+        json["tumor_area_at_10X"] = area.tolist()
 
         for contour in contours:
             contour = np.flip(contour, axis=1)
@@ -73,10 +76,14 @@ class generate_polygon_json:
         for fn in png_fns:
             json_patch = self.generate_json_one_patch(fn)
             json_wsi["polygon"].extend(json_patch["polygon"])
-            json_wsi["area"] += json_patch["area"]
+            json_wsi["tumor_area_at_10X"] += json_patch["tumor_area_at_10X"]
 
         wsi_name = self.wsi_out.rstrip('/').split('/')[-1]
         json_fn = os.path.join(self.wsi_out, wsi_name + '.json')
+        json_wsi["wsi"] = wsi_name
+        json_wsi["width"] = self.width
+        json_wsi["height"] = self.height
+
         with open(json_fn, 'w') as fp:
             json.dump(json_wsi, fp)
 
