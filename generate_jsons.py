@@ -1,5 +1,6 @@
 from util_codes import generate_polygon_json
 import os, time
+import multiprocessing
 from multiprocessing import Pool
 
 
@@ -48,7 +49,9 @@ def main(wsi_fol, out_fol):
                 return
             continue
 
-        pool = Pool(processes=min(16, len(wsi_out_fols)))
+        num_of_cores = multiprocessing.cpu_count() - 2  # leave 2CPUs for other tasks
+        num_of_cores = min(num_of_cores, len(wsi_out_fols))
+        pool = Pool(processes=num_of_cores)
         pool.map(generate_json_one_wsi, args)
         pool.close()
 
