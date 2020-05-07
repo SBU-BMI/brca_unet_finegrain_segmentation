@@ -52,7 +52,7 @@ def clean_done_fol(done_fol, out_fol, indicator_file='prediction_done.txt'):
 
 if __name__ == '__main__':
     # parameter to change =======================================================
-    IN_FOLDER = '/data01/shared/hanle/svs_tcga_seer_brca'
+    IN_FOLDER = '/data10/shared/hanle/svs_sample'
     wsi_extension = 'svs'
     model_path = 'model/CP1860_resolution10_APS448_Test_upLearned_best_0.8005.pth'
     OUT_FOLDER = IN_FOLDER.rstrip('/').split('/')[-1]

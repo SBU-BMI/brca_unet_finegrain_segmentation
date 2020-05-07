@@ -71,7 +71,7 @@ def main(wsi_fol, wsi_extension, out_fol, model_path):
 
 if __name__ == '__main__':
     # parameter to change =======================================================
-    wsi_fol = '/data01/shared/hanle/svs_tcga_seer_brca'
+    wsi_fol = '/data10/shared/hanle/svs_sample'
     wsi_extension = 'svs'
     model_path = 'model/CP1860_resolution10_APS448_Test_upLearned_best_0.8005.pth'
     out_fol = wsi_fol.rstrip('/').split('/')[-1]

@@ -39,12 +39,12 @@ This repo is for training and running prediction of brca finegrain segmentation 
 - The predicted patches are original patches overlayed with predicted masks.
 
 ## Prediction on WSIs
-
+- For demo, run the prediction for 2 WSIs at "/data10/shared/hanle/svs_sample" (already setup in the codes, no action required to get the WSIs).
 - Either run python prediction_WSIs_single_machine.py or python prediction_WSIs_multiple_machines.py to run prediction on WSIs
 - Use prediction_WSIs_single_machine.py if you have only 1 machine to use
 - Use prediction_WSIs_multiple_machines.py on different machine to process multiple WSIs at the same time
 - Arguments to be changed in the __main__ function including wsi_fol, wsi_extension, model_path, out_fol
-- All WSIs in the wsi_fol with extension wsi_extension will be processed. The predicted masks are saved in corresponding folder in out_fol
+- All WSIs in the wsi_fol with extension wsi_extension will be processed. The predicted masks are saved in corresponding folder in out_fol. In this case, the out_fol is "svs_sample"
 
 ## Generaate polygon jsons for predicted masks
 
