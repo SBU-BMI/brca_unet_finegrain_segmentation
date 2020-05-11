@@ -9,10 +9,10 @@ import time
 
 def get_json_template():
     json = {
-        "wsi": '',
-        "width": 0,
-        "height": 0,
-        "polygon": [],
+        "wsi": '',              # WSI filename
+        "width": 0,             # WSI width at maximum mag
+        "height": 0,            # WSI height at maximum mag
+        "polygon": [],          # Each element in polygon is a list of pairs [x, y],
         "tumor_area_at_10X": 0
     }
     return json
